@@ -1,0 +1,108 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Pessoa {
+    protected String nome;
+    protected int idade;
+ 
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+ 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+ 
+    public int getIdade() {
+        return idade;
+    }
+ 
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+}
+ 
+class Aluno extends Pessoa {
+    private List<Disciplina> disciplinas = new ArrayList<>();
+    private Map<Disciplina, Double> notas = new HashMap<>();
+ 
+    public Aluno(String nome, int idade) {
+        super(nome, idade);
+    }
+ 
+    public void adicionarDisciplina(Disciplina disciplina) {
+        disciplinas.add(disciplina);
+    }
+ 
+    public void atribuirNota(Disciplina disciplina, double nota) {
+        if (disciplinas.contains(disciplina)) {
+            notas.put(disciplina, nota);
+        } else {
+            System.out.println("O aluno não está matriculado na disciplina.");
+        }
+    }
+ 
+    public void gerarHistorico() {
+        System.out.println("Histórico de " + nome + ":");
+        for (Map.Entry<Disciplina, Double> entry : notas.entrySet()) {
+            System.out.println(entry.getKey().getNome() + ": " + entry.getValue());
+        }
+    }
+}
+ 
+class Professor extends Pessoa {
+    public Professor(String nome, int idade) {
+        super(nome, idade);
+    }
+ 
+    public void atribuirNota(Aluno aluno, Disciplina disciplina, double nota) {
+        aluno.atribuirNota(disciplina, nota);
+    }
+}
+ 
+class Disciplina {
+    private String nome;
+ 
+    public Disciplina(String nome) {
+        this.nome = nome;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+ 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+}
+ 
+public class Main {
+    public static void main(String[] args) {
+        Aluno aluno1 = new Aluno("João", 20);
+        Aluno aluno2 = new Aluno("Maria", 22);
+ 
+        Professor professor = new Professor("Dr. Silva", 40);
+ 
+        Disciplina matematica = new Disciplina("Matemática");
+        Disciplina historia = new Disciplina("História");
+ 
+        aluno1.adicionarDisciplina(matematica);
+        aluno1.adicionarDisciplina(historia);
+ 
+        aluno2.adicionarDisciplina(matematica);
+ 
+        professor.atribuirNota(aluno1, matematica, 8.5);
+        professor.atribuirNota(aluno1, historia, 7.0);
+        professor.atribuirNota(aluno2, matematica, 9.0);
+ 
+        aluno1.gerarHistorico();
+        aluno2.gerarHistorico();
+    }
+}

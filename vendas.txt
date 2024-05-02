@@ -1,0 +1,116 @@
+import java.util.ArrayList;
+import java.util.List;
+ 
+class Produto {
+    protected String nome;
+    protected double preco;
+ 
+    public Produto(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+ 
+    public double getPreco() {
+        return preco;
+    }
+}
+ 
+class Eletronico extends Produto {
+    public Eletronico(String nome, double preco) {
+        super(nome, preco);
+    }
+}
+ 
+class Roupa extends Produto {
+    public Roupa(String nome, double preco) {
+        super(nome, preco);
+    }
+}
+ 
+class Cliente {
+    protected String nome;
+    protected boolean isVIP;
+ 
+    public Cliente(String nome, boolean isVIP) {
+        this.nome = nome;
+        this.isVIP = isVIP;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+ 
+    public boolean isVIP() {
+        return isVIP;
+    }
+}
+ 
+class CarrinhoDeCompras {
+    private List<Produto> produtos = new ArrayList<>();
+ 
+    public void adicionarProduto(Produto produto) {
+        produtos.add(produto);
+    }
+ 
+    public double calcularTotal() {
+        double total = 0;
+        for (Produto produto : produtos) {
+            total += produto.getPreco();
+        }
+        return total;
+    }
+ 
+    public double calcularTotalComDesconto(boolean isVIP, boolean pagamentoPIX) {
+        double total = calcularTotal();
+        if (pagamentoPIX) {
+            total *= 0.9;
+        }
+        if (!isVIP || produtos.size() > 10) {
+            return total;
+        } else {
+            return total - calcularFrete(total);
+        }
+    }
+ 
+    private double calcularFrete(double total) {
+        return total * 0.1; 
+    }
+}
+ 
+public class Main {
+    public static void main(String[] args) {
+        Eletronico celular = new Eletronico("Smartphone", 1500.0);
+        Roupa camiseta = new Roupa("Camiseta", 50.0);
+ 
+        Cliente clienteRegular = new Cliente("João", false);
+        Cliente clienteVIP = new Cliente("Maria", true);
+ 
+        CarrinhoDeCompras carrinho1 = new CarrinhoDeCompras();
+        CarrinhoDeCompras carrinho2 = new CarrinhoDeCompras();
+ 
+        carrinho1.adicionarProduto(celular);
+        carrinho1.adicionarProduto(camiseta);
+ 
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+        carrinho2.adicionarProduto(celular);
+        carrinho2.adicionarProduto(camiseta);
+ 
+        System.out.println("Total a pagar pelo cliente regular: R$" + carrinho1.calcularTotalComDesconto(clienteRegular.isVIP(), false));
+        System.out.println("Total a pagar pelo cliente VIP: R$" + carrinho1.calcularTotalComDesconto(clienteVIP.isVIP(), false));
+        System.out.println("Total a pagar pelo cliente regular no PIX: R$" + carrinho1.calcularTotalComDesconto(clienteRegular.isVIP(), true));
+        System.out.println("Total a pagar pelo cliente VIP no PIX: R$" + carrinho1.calcularTotalComDesconto(clienteVIP.isVIP(), true));
+    }
+}

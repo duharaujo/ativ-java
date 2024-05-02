@@ -1,0 +1,124 @@
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+ 
+class Livro {
+    private String titulo;
+    private String autor;
+    private int numCopiasDisponiveis;
+ 
+    public Livro(String titulo, String autor, int numCopiasDisponiveis) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.numCopiasDisponiveis = numCopiasDisponiveis;
+    }
+ 
+    public String getTitulo() {
+        return titulo;
+    }
+ 
+    public String getAutor() {
+        return autor;
+    }
+ 
+    public int getNumCopiasDisponiveis() {
+        return numCopiasDisponiveis;
+    }
+ 
+    public void emprestar() {
+        if (numCopiasDisponiveis > 0) {
+            numCopiasDisponiveis--;
+            System.out.println("Livro \"" + titulo + "\" emprestado com sucesso.");
+        } else {
+            System.out.println("Desculpe, não há cópias disponíveis para empréstimo do livro \"" + titulo + "\".");
+        }
+    }
+ 
+    public void devolver() {
+        numCopiasDisponiveis++;
+        System.out.println("Livro \"" + titulo + "\" devolvido com sucesso.");
+    }
+}
+ 
+class Usuario {
+    protected String nome;
+ 
+    public Usuario(String nome) {
+        this.nome = nome;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+}
+ 
+class Aluno extends Usuario {
+    private List<Livro> livrosEmprestados = new ArrayList<>();
+ 
+    public Aluno(String nome) {
+        super(nome);
+    }
+ 
+    public boolean podeEmprestar() {
+        return livrosEmprestados.size() < 2;
+    }
+ 
+    public void emprestarLivro(Livro livro) {
+        if (podeEmprestar()) {
+            livro.emprestar();
+            livrosEmprestados.add(livro);
+        } else {
+            System.out.println("Você já atingiu o limite de empréstimos.");
+        }
+    }
+ 
+    public void devolverLivro(Livro livro) {
+        livro.devolver();
+        livrosEmprestados.remove(livro);
+    }
+}
+ 
+class Professor extends Usuario {
+    private List<Livro> livrosEmprestados = new ArrayList<>();
+ 
+    public Professor(String nome) {
+        super(nome);
+    }
+ 
+    public boolean podeEmprestar() {
+        return livrosEmprestados.size() < 10;
+    }
+ 
+    public void emprestarLivro(Livro livro) {
+        if (podeEmprestar()) {
+            livro.emprestar();
+            livrosEmprestados.add(livro);
+        } else {
+            System.out.println("Você já atingiu o limite de empréstimos.");
+        }
+    }
+ 
+    public void devolverLivro(Livro livro) {
+        livro.devolver();
+        livrosEmprestados.remove(livro);
+    }
+}
+ 
+public class Main {
+    public static void main(String[] args) {
+        Livro livro1 = new Livro("Dom Casmurro", "Machado de Assis", 3);
+        Livro livro2 = new Livro("O Senhor dos Anéis", "J.R.R. Tolkien", 2);
+ 
+        Aluno aluno = new Aluno("João");
+        Professor professor = new Professor("Dr. Silva");
+ 
+        aluno.emprestarLivro(livro1);
+        aluno.emprestarLivro(livro2);
+        aluno.emprestarLivro(livro1); 
+        professor.emprestarLivro(livro2);
+        professor.emprestarLivro(livro1); 
+ 
+        aluno.devolverLivro(livro1);
+        professor.devolverLivro(livro2);
+    }
+}
